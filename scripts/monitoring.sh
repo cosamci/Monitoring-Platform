@@ -15,5 +15,14 @@ LOG_FILE="system-state.log"
 echo "The script will start monitoring system activity every $INTERVAL sec."
 echo "Logs will be writen in the system-state.log file."
 
-echo "Timestamp: $(date)" >> "$LOG_FILE"
-echo "Hostname: $(hostname)" >> "$LOG_FILE"
+while true
+do
+    printf "Timestamp: %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" >> "$LOG_FILE"
+    printf "Hostname: %s\n" "$(hostname)" >> "$LOG_FILE"
+    printf "CPU: %s\n" "$(top | grep CPU)" >> "$LOG_FILE"
+    printf "Memory: %s\n" "$(free -h | grep Mem)" >> "$LOG_FILE"
+    printf "Active process number: %s\n" "$(ps aux | wc -l)" >> "$LOG_FILE"
+    printf "Disk usage: %s\n" "$(df -h | grep Usage)" >> "$LOG_FILE"
+    echo "--------------------------" >> "$LOG_FILE"
+    sleep $INTERVAL
+done
